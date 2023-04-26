@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
+// import Recorder from "../src/recorder";
 
-const mimeType = "audio/webm";
+const mimeType = "audio/wav";
 
 const AudioRecorder = () => {
 	const [permission, setPermission] = useState(false);
@@ -24,6 +25,15 @@ const AudioRecorder = () => {
 					audio: true,
 					video: false,
 				});
+
+				// audioContext = new AudioContext();
+
+				// input = audioContext.createMediaStreamSource(mediaStream);
+
+				// rec = new Recorder(input,{numChannels:1})
+
+				// rec.record();
+
 				setPermission(true);
 				setStream(mediaStream);
 			} catch (err) {
@@ -36,26 +46,60 @@ const AudioRecorder = () => {
 
 	useEffect(() => {
 		console.log("audioblob changed", audioBlob)
+		// const recordedFile = new File([audioBlob], `test.wav`);
+		//   initializes an empty FormData
+		// let data = new FormData();
+		//   appends the recorded file and language value
+		// data.append("file", recordedFile);
+
+
 		if (audioBlob != undefined) {
-			console.log("audioBlobin useeffect", audioBlob)
+			console.log("audioBlob in useeffect", audioBlob);
+			const audiotext = audioBlob.text();
+			audiotext.then((a) => {
+				let formData = new FormData();
+      			formData.append('audio', audioBlob);
+
 			const payload = {
 				method: 'POST',
-				// mode: 'no-cors',
 
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-					'Access-Control-Allow-Headers': '*',
-					'Accept': 'text/plain',
-					'Content-Type': 'text/plain'
-				},
-				body: audioBlob
+				// headers: {
+				// 	'Access-Control-Allow-Origin': '*',
+				// 	'Access-Control-Allow-Headers': '*',
+				// 	// 'Accept': 'text/plain',
+				// 	'Accept': 'application/json',
+				// 	// 'Content-Type': 'text/plain'
+				// 	// 'Content-Type': 'application/json'
+				// 	'Content-Type': 'multipart/form-data'
+				// },
+				body: formData
+				// data
+				// audioBlob.arrayBuffer()
+				// audioBlob.text()
 			}
-			console.log("fetching request", payload)
+			console.log("fetching request", formData)
+
+      console.log('blob', audioBlob);
+
+    //   $.ajax({
+    //     type: 'POST',
+    //     url: 'http://127.0.0.1:5000/',
+    //     data: formData,
+    //     contentType: false,
+    //     processData: false,
+    //     success: function(result) {
+    //       console.log('success', result);
+    //     },
+    //     error: function(result) {
+    //       alert('sorry an error occured');
+    //     }
+    //   });
+
 			fetch('http://127.0.0.1:5000/', payload)
-				.then(response => response.json())
-				// .then(data => data)
+				.then(response => console.log(response.json()))
+				// .then(data => console.log(data))
 				.catch(error => console.log("error is", error))
-		}
+		})}
 	}, [audioBlob])
 
 	const startRecording = async () => {
@@ -81,11 +125,17 @@ const AudioRecorder = () => {
 		setRecordingStatus("inactive");
 		mediaRecorder.current.stop();
 
+		// rec.stop();
+
+		// rec.exportWAV(createDownloadLink);
+
 		mediaRecorder.current.onstop = () => {
-			const audioblob = new Blob(audioChunks, { type: mimeType });
+			console.log('blob', audioChunks.blob);
+			const audioblob = new Blob(audioChunks, {type:'audio/wav; codecs=MS_PCM'});//new Blob(audioChunks, { type: mimeType });
 			const audioUrl = URL.createObjectURL(audioblob);
 
-			console.log(audioUrl, audioblob);
+
+			console.log('url and blob ', audioUrl, audioblob);
 
 			setAudio(audioUrl);
 			setAudioBlob(audioblob)

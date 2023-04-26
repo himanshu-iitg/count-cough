@@ -91,7 +91,7 @@ def predict(data:Sound):
     input_path = recieved['sound_path']
     fs, x = wavfile.read(input_path)
     if is_cough(fs, x):
-        # l_x = wavfile_to_librosa(x)
+        l_x = wavfile_to_librosa(x)
         l_x, fs = librosa.load(input_path)
         return segregate_cough(l_x, fs)
 

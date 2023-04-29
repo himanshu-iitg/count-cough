@@ -1,12 +1,34 @@
 import json
+import noisereduce as nr
 
 import librosa
 import io
 import soundfile as sf
 from scipy.io import wavfile
-# import moviepy.editor as moviepy
-# from six.moves.urllib.request import urlopen
+import ffmpeg
+import os
 from werkzeug.utils import secure_filename
+
+
+def fix_riff_header(binary):
+    process = (ffmpeg
+               .input('pipe:0')
+               .output('pipe:1', format='wav')
+               .run_async(pipe_stdin=True, pipe_stdout=True, pipe_stderr=True, quiet=True, overwrite_output=True)
+               )
+    output, err = process.communicate(input=binary)
+
+    riff_chunk_size = len(output) - 8
+    # Break up the chunk size into four bytes, held in b.
+    q = riff_chunk_size
+    b = []
+    for i in range(4):
+        q, r = divmod(q, 256)
+        b.append(r)
+
+        # Replace bytes 4:8 in proc.stdout with the actual size of the RIFF chunk.
+    riff = output[:4] + bytes(b) + output[8:]
+    return riff
 
 import pickle
 import sys
@@ -60,21 +82,23 @@ def hello():
     data.save(path)
     data.seek(0)
     # return request.get_json()
-    # data, samplerate = sf.read(io.BytesIO(data.read()))
+    riff = fix_riff_header(data.read())
+    data, samplerate = sf.read(io.BytesIO(riff))
     # data, samplerate = sf.read(open(path, encoding='utf8', errors='ignore'))
-    # fio = io.BytesIO()
-    # sf.write(
-    #     path,
-    #     data,
-    #     samplerate=samplerate,
-    #     subtype='PCM_16',
-    #     format='wav'
-    # )
-    # data = fio.getvalue()
 
+    # fio = io.BytesIO()
+    sf.write(
+        path,
+        data,
+        samplerate=samplerate,
+        subtype='PCM_16',
+        format='wav'
+    )
+    # data = fio.getvalue()
     # print(data)
     # return segregate_cough(path)
-    return segregate_cough(data.read())
+    # return segregate_cough(data.read())
+    return segregate_cough(riff)
     # return segregate_cough(data)
     # return segregate_cough(fio)
     # return {"out":"Hello World!"}         # which returns "hello world"
@@ -85,7 +109,7 @@ def segregate_cough(path):
     :param input_path:
     :return:
     """
-    # fs, x = wavfile.read(path.decode().encode('utf-8').strip())
+    # fs, x = wavfile.read(path)
     # with open(path, encoding='utf8', errors='ignore') as o:
     #     fs, x = wavfile.read(o)
     # prob = cough_probability(fs, x)
@@ -93,10 +117,15 @@ def segregate_cough(path):
 
     # x, fs = librosa.load(path=path, sr=None, mono=True)
     x, fs = sf.read(io.BytesIO(path))
-    prob2 = cough_probability(fs, x)
+
+    reduced_noise = nr.reduce_noise(y=x, sr=fs)
+
+    prob2 = cough_probability(fs, reduced_noise)
+    print('prob', prob2)
+
 
     if prob2 > 0.5:
-        cough_segments, mask = segment_cough(x, fs)
+        cough_segments, mask = segment_cough(x, fs, min_cough_len=0.1)
     else:
         cough_segments = []
     # return {'segments': [s.tolist() for s in cough_segments], 'mask': mask.tolist()}

@@ -1,7 +1,16 @@
 import { useState, useRef, useEffect } from "react";
-// import Recorder from "../src/recorder";
+import Recorder from "../src/recorder";
 
-const mimeType = "audio/wav";
+// const mimeType = "audio/wav";
+const mimeType = "audio/wav codecs=MS_PCM";
+
+var gumStream; 						//stream from getUserMedia()
+var rec; 							//Recorder.js object
+var input; 							//MediaStreamAudioSourceNode we'll be recording
+
+// shim for AudioContext when it's not avb.
+var AudioContext = window.AudioContext || window.webkitAudioContext;
+var audioContext //audio context to help us record
 
 const AudioRecorder = () => {
 	const [permission, setPermission] = useState(false);
@@ -25,14 +34,6 @@ const AudioRecorder = () => {
 					audio: true,
 					video: false,
 				});
-
-				// audioContext = new AudioContext();
-
-				// input = audioContext.createMediaStreamSource(mediaStream);
-
-				// rec = new Recorder(input,{numChannels:1})
-
-				// rec.record();
 
 				setPermission(true);
 				setStream(mediaStream);
@@ -63,15 +64,15 @@ const AudioRecorder = () => {
 			const payload = {
 				method: 'POST',
 
-				// headers: {
-				// 	'Access-Control-Allow-Origin': '*',
-				// 	'Access-Control-Allow-Headers': '*',
-				// 	// 'Accept': 'text/plain',
-				// 	'Accept': 'application/json',
-				// 	// 'Content-Type': 'text/plain'
-				// 	// 'Content-Type': 'application/json'
-				// 	'Content-Type': 'multipart/form-data'
-				// },
+				headers: {
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Headers': '*',
+					// 'Accept': 'text/plain',
+					// 'Accept': 'application/json',
+					// 'Content-Type': 'text/plain'
+					// 'Content-Type': 'application/json'
+					// 'Content-Type': 'multipart/form-data'
+				},
 				body: formData
 				// data
 				// audioBlob.arrayBuffer()
@@ -104,7 +105,16 @@ const AudioRecorder = () => {
 
 	const startRecording = async () => {
 		setRecordingStatus("recording");
-		const media = new MediaRecorder(stream, { type: mimeType });
+
+		audioContext = new AudioContext();
+
+				input = audioContext.createMediaStreamSource(mediaStream);
+
+				rec = new Recorder(input,{numChannels:1})
+
+				rec.record();
+
+		const media = new MediaRecorder(stream, { type: mimeType});
 
 		mediaRecorder.current = media;
 
@@ -125,13 +135,11 @@ const AudioRecorder = () => {
 		setRecordingStatus("inactive");
 		mediaRecorder.current.stop();
 
-		// rec.stop();
+		rec.stop();
 
-		// rec.exportWAV(createDownloadLink);
+		rec.exportWAV(createDownloadLink);
 
-		mediaRecorder.current.onstop = () => {
-			console.log('blob', audioChunks.blob);
-			const audioblob = new Blob(audioChunks, {type:'audio/wav; codecs=MS_PCM'});//new Blob(audioChunks, { type: mimeType });
+		function createDownloadLink(audioblob) {
 			const audioUrl = URL.createObjectURL(audioblob);
 
 
@@ -139,9 +147,21 @@ const AudioRecorder = () => {
 
 			setAudio(audioUrl);
 			setAudioBlob(audioblob)
-			// handleData(audioBlob)
+		}
 
-		};
+		// mediaRecorder.current.onstop = () => {
+		// 	console.log('blob', audioChunks.blob);
+		// 	const audioblob = new Blob(audioChunks, {type:'audio/wav; codecs=MS_PCM'});//new Blob(audioChunks, { type: mimeType });
+		// 	const audioUrl = URL.createObjectURL(audioblob);
+
+
+		// 	console.log('url and blob ', audioUrl, audioblob);
+
+		// 	setAudio(audioUrl);
+		// 	setAudioBlob(audioblob)
+		// 	// handleData(audioBlob)
+
+		// };
 	};
 
 	return (

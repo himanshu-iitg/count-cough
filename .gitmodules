@@ -2,7 +2,3 @@
 	path = segmentcough
 	url = https://github.com/himanshu-iitg/segmentcough.git
 	branch = only_segment
-[submodule "yamnet"]
-	path = sound_predictor
-	url = https://github.com/himanshu-iitg/yamnet.git
-	branch = yamnet

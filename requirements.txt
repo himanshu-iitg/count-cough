@@ -1,5 +1,4 @@
-xgboost==0.90
-scipy==1.10.1
+git+https://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@github.com/himanshu-iitg/yamnet.git@yamnet
+noisereduce
 flask
 flask-cors
-git+https://github.com/himanshu-iitg/yamnet.git@yamnet

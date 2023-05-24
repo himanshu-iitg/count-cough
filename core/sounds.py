@@ -1,14 +1,13 @@
 import json
 
-import numpy as np
 from yamnet.config.constants import HOP_SECONDS
 from yamnet.run import get_top_audio_scores
-
+import soundfile as sf
 from configuration.constants import COUGH_THRESHOLD, COUGH_INDEX, BREATH_INDEX, BREATH_THRESHOLD, VOWEL_INDEX, \
     VOWEL_THRESHOLD, SPEECH_THRESHOLD, SNORE_INDEX, SNORE_THRESHOLD, SPEECH_INDEX
 from segmentcough.ops.segmentation import segment_cough
 from utils.input import get_audio
-from utils.utilities import check_noise_and_index_prob
+from utils.utilities import check_noise_and_index_prob, segment_cough_sound
 
 
 def get_sound_prop_for_index(binary_file, remove_noise, index):
@@ -22,7 +21,7 @@ def get_sound_prop_for_index(binary_file, remove_noise, index):
     """
     fs, reduced_noise = get_audio(binary_file, remove_noise)
     top, scores = get_top_audio_scores(fs, reduced_noise)
-    # print(top)
+    print(top)
     noise_prob, index_prob = check_noise_and_index_prob(top, index)
     return fs, reduced_noise, noise_prob, index_prob
 
@@ -39,18 +38,23 @@ def find_cough_sound_prop(binary_file, remove_noise=True):
 
     # TODO: need to improve segmentation code not workking very well for different cases.
     #  Need to study about segmentation theory
-    segment, mask = segment_cough(reduced_noise, fs, min_cough_len=0.05, th_l_multiplier=0.05,
-                                  th_h_multiplier=3, cough_padding=0.5)
+    # segment, mask = segment_cough(reduced_noise, fs, min_cough_len=0.05, th_l_multiplier=0.05,
+    #                               th_h_multiplier=3, cough_padding=0.5)
+    # segment = segment_cough_sound(reduced_noise, fs, min_cough_duration=0.05)
+    segment = segment_cough_sound(reduced_noise, fs, min_cough_duration=0.5)
+
     total_seg = len(segment)
+    # print('old seg', total_seg)
+    print('new  seg', len(segment))
 
     count = 0
     for i, s in enumerate(segment):
         _top, sc = get_top_audio_scores(fs, s)
-        n, cgh = check_noise_and_index_prob(sc, COUGH_INDEX)
-        print(f'number = {i}', cgh)
+        n, cgh = check_noise_and_index_prob(_top, COUGH_INDEX)
+        print(f'number = {i}', _top, cgh)
         if cgh > COUGH_THRESHOLD:
-            # sf.write(f'no_n_seg_{i}.wav', s, samplerate=fs,
-            #     subtype='PCM_16', format='wav')
+            sf.write(f'no_noise_seg_{i}.wav', s, samplerate=fs,
+                subtype='PCM_16', format='wav')
             count += 1
 
     data = {'noise_prob': noise_prob, 'cough_prob': str(cough_prob),

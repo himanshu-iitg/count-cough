@@ -1,3 +1,13 @@
+import os.path
+import sys
+
+import logging
+from logging import Formatter, FileHandler
+
+print(os.path.join(os.path.dirname(__file__), '../'))
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
+
 from flask import Flask, request
 from flask_cors import CORS
 from core.sounds import find_cough_sound_prop, find_breathing_sound_prop, find_vowel_sound_prop, find_speech_sound_prop, \
@@ -9,21 +19,32 @@ CORS(app)
 
 @app.route("/cough", methods=["POST"])  # at the end point /
 def get_cough_data():
-    # path = "../../segmentcough-master/segmentcough-master/cough.wav"
-    data_file = request.files['audio']
+    # print(request.files)
+    # path = "../../segmentcough-master/segmentcough-master/temp.wav"
+    path = "../../segmentcough-master/segmentcough-master/snore.wav"
+    # data_file = request.files['audio']
+    app.logger.debug("Obtained file, sending the data for segmentation.")
     # data_file.save(path)
+    output = find_breathing_sound_prop(path)
+    app.logger.debug(f'output obtained for cough sound {output}')
     # data_file.seek(0)
 
-    return find_cough_sound_prop(data_file.read())
+
+    return find_cough_sound_prop(path, remove_noise=False)
+    # return find_cough_sound_prop(data_file.read())
 
 @app.route("/breath", methods=["POST"])  # at the end point /
 def get_breath_data():
     # path = "../../segmentcough-master/segmentcough-master/breath.wav"
     data_file = request.files['audio']
+    app.logger.info("Obtained file, sending the data for segmentation.")
+
+    output = find_breathing_sound_prop(data_file.read())
+    app.logger.info(f'output obtained for cough sound {output}')
     # data_file.save(path)
     # data_file.seek(0)
 
-    return find_breathing_sound_prop(data_file.read())
+    return output
 
 @app.route("/vowel", methods=["POST"])  # at the end point /
 def get_vowel_data():
@@ -55,4 +76,8 @@ def get_snore_data():
     return find_snoring_sound_prop(data_file.read())
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(host="0.0.0.0", port=80, debug=True)
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.DEBUG)
+    app.logger.addHandler(handler)
+    app.run(host="127.0.0.1", port=5000, debug=True)

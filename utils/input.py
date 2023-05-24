@@ -13,8 +13,8 @@ def get_audio(binary_file, remove_noise):
     :param remove_noise:
     :return:
     """
-    wav_data, fs = sf.read(io.BytesIO(binary_file), dtype=np.int16)
-    # wav_data, fs = sf.read(file=binary_file, dtype=np.int16)
+    # wav_data, fs = sf.read(io.BytesIO(binary_file), dtype=np.int16)
+    wav_data, fs = sf.read(file=binary_file, dtype=np.int16)
     if len(wav_data.shape) > 1:
         wav_data = np.mean(wav_data, axis=1)
     if remove_noise:

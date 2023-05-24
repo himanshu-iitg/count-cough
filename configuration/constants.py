@@ -2,11 +2,11 @@
 COMMON_THRESHOLD = 0.3
 
 # Cough settings
-COUGH_THRESHOLD = 0.3
+COUGH_THRESHOLD = 0.2
 COUGH_INDEX = 42
 
 # Breath settings
-BREATH_THRESHOLD = 0.3
+BREATH_THRESHOLD = 0.2
 BREATH_INDEX = 36
 
 # Vowel settings

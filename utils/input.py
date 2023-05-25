@@ -6,15 +6,18 @@ import soundfile as sf
 import tensorflow as tf
 
 
-def get_audio(binary_file, remove_noise):
+def get_audio(binary_file, remove_noise, from_file_path=False):
     """
     --> Read audio from binary data and remove stationary noise if required
     :param binary_file:
     :param remove_noise:
     :return:
     """
-    # wav_data, fs = sf.read(io.BytesIO(binary_file), dtype=np.int16)
-    wav_data, fs = sf.read(file=binary_file, dtype=np.int16)
+    if from_file_path:
+        wav_data, fs = sf.read(file=binary_file, dtype=np.int16)
+    else:
+        wav_data, fs = sf.read(io.BytesIO(binary_file), dtype=np.int16)
+
     if len(wav_data.shape) > 1:
         wav_data = np.mean(wav_data, axis=1)
     if remove_noise:

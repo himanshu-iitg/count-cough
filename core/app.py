@@ -16,24 +16,32 @@ from core.sounds import find_cough_sound_prop, find_breathing_sound_prop, find_v
 app = Flask(__name__)  # create an app instance
 CORS(app)
 
+@app.route("/", methods=["GET", "POST"])  # at the end point /
+def test_run():
+    print('test run')
+    path = "noise_seg_0.wav"
+    app.logger.debug("Obtained file, sending the data for segmentation.")
 
-@app.route("/cough", methods=["POST"])  # at the end point /
+    return find_cough_sound_prop(path, remove_noise=False, is_file=True)
+
+
+@app.route("/cough", methods=["GET", "POST"])  # at the end point /
 def get_cough_data():
     # print(request.files)
     # path = "../../segmentcough-master/segmentcough-master/temp.wav"
-    path = "../../segmentcough-master/segmentcough-master/snore.wav"
-    # data_file = request.files['audio']
+    # path = "../../segmentcough-master/segmentcough-master/snore.wav"
+    data_file = request.files['audio']
     app.logger.debug("Obtained file, sending the data for segmentation.")
     # data_file.save(path)
-    output = find_breathing_sound_prop(path)
+    # output = find_breathing_sound_prop(path)
+    output = find_cough_sound_prop(data_file.read())
     app.logger.debug(f'output obtained for cough sound {output}')
     # data_file.seek(0)
 
+    # return find_cough_sound_prop(path, remove_noise=False)
+    return output
 
-    return find_cough_sound_prop(path, remove_noise=False)
-    # return find_cough_sound_prop(data_file.read())
-
-@app.route("/breath", methods=["POST"])  # at the end point /
+@app.route("/breath", methods=["GET", "POST"])  # at the end point /
 def get_breath_data():
     # path = "../../segmentcough-master/segmentcough-master/breath.wav"
     data_file = request.files['audio']
@@ -46,7 +54,7 @@ def get_breath_data():
 
     return output
 
-@app.route("/vowel", methods=["POST"])  # at the end point /
+@app.route("/vowel", methods=["GET", "POST"])  # at the end point /
 def get_vowel_data():
     # path = "../../segmentcough-master/segmentcough-master/vowel.wav"
     data_file = request.files['audio']
@@ -56,7 +64,7 @@ def get_vowel_data():
     return find_vowel_sound_prop(data_file.read())
 
 
-@app.route("/speech", methods=["POST"])  # at the end point /
+@app.route("/speech", methods=["GET", "POST"])  # at the end point /
 def get_speech_data():
     # path = "../../segmentcough-master/segmentcough-master/speech.wav"
     data_file = request.files['audio']
@@ -66,7 +74,7 @@ def get_speech_data():
     return find_speech_sound_prop(data_file.read())
 
 
-@app.route("/snore", methods=["POST"])  # at the end point /
+@app.route("/snore", methods=["GET", "POST"])  # at the end point /
 def get_snore_data():
     # path = "../../segmentcough-master/segmentcough-master/snore.wav"
     data_file = request.files['audio']
@@ -76,8 +84,12 @@ def get_snore_data():
     return find_snoring_sound_prop(data_file.read())
 
 if __name__ == '__main__':
-    # app.run(host="0.0.0.0", port=80, debug=True)
-    handler = logging.StreamHandler()
-    handler.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler(sys.stdout)
+    # handler = logging.StreamHandler()
+    logging.basicConfig(filename='flask.log', level=logging.DEBUG,
+                        format=f'%(asctime)s %('f'name)s %(module)s,  =>'
+                               f' %(lineno)d [%(levelname)s]: %(message)s')
     app.logger.addHandler(handler)
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    # app.run(host="0.0.0.0", port=80, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
+    # app.run(host="127.0.0.1", port=5000, debug=True)

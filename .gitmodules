@@ -1,4 +1,0 @@
-[submodule "segmentcough"]
-	path = segmentcough
-	url = https://github.com/himanshu-iitg/segmentcough.git
-	branch = only_segment

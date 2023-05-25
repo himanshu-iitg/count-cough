@@ -5,12 +5,12 @@ from yamnet.run import get_top_audio_scores
 import soundfile as sf
 from configuration.constants import COUGH_THRESHOLD, COUGH_INDEX, BREATH_INDEX, BREATH_THRESHOLD, VOWEL_INDEX, \
     VOWEL_THRESHOLD, SPEECH_THRESHOLD, SNORE_INDEX, SNORE_THRESHOLD, SPEECH_INDEX
-from segmentcough.ops.segmentation import segment_cough
+# from segmentcough.ops.segmentation import segment_cough
 from utils.input import get_audio
 from utils.utilities import check_noise_and_index_prob, segment_cough_sound
 
 
-def get_sound_prop_for_index(binary_file, remove_noise, index):
+def get_sound_prop_for_index(binary_file, remove_noise, index, is_file=False):
     """
     --> Returns the properties of sound like the top_n sounds present noise and index probability
         and actual processed sound data
@@ -19,14 +19,14 @@ def get_sound_prop_for_index(binary_file, remove_noise, index):
     :param index:
     :return:
     """
-    fs, reduced_noise = get_audio(binary_file, remove_noise)
+    fs, reduced_noise = get_audio(binary_file, remove_noise, is_file)
     top, scores = get_top_audio_scores(fs, reduced_noise)
     print(top)
     noise_prob, index_prob = check_noise_and_index_prob(top, index)
     return fs, reduced_noise, noise_prob, index_prob
 
 
-def find_cough_sound_prop(binary_file, remove_noise=True):
+def find_cough_sound_prop(binary_file, remove_noise=True, is_file=False):
     """
     --> detects if cough is present in the voice or not
     :param binary_file:
@@ -34,7 +34,7 @@ def find_cough_sound_prop(binary_file, remove_noise=True):
     :return:
     """
     fs, reduced_noise, noise_prob, cough_prob = \
-        get_sound_prop_for_index(binary_file, remove_noise, COUGH_INDEX)
+        get_sound_prop_for_index(binary_file, remove_noise, COUGH_INDEX, is_file)
 
     # TODO: need to improve segmentation code not workking very well for different cases.
     #  Need to study about segmentation theory
@@ -57,9 +57,9 @@ def find_cough_sound_prop(binary_file, remove_noise=True):
                 subtype='PCM_16', format='wav')
             count += 1
 
-    data = {'noise_prob': noise_prob, 'cough_prob': str(cough_prob),
-            'total_segments': total_seg if total_seg > 0 else 1,
-            'cough_segments': count if total_seg > 0 else 1}
+    data = {'noise_prob': noise_prob, 'cough_prob': float(round(cough_prob, 2)),
+            'total_segments': 1 if total_seg == 0 and cough_prob >= COUGH_THRESHOLD else total_seg,
+            'cough_segments': 1 if total_seg == 0 and cough_prob >= COUGH_THRESHOLD else count}
     print(data)
     return json.dumps(data)
 

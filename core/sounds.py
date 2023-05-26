@@ -3,6 +3,7 @@ import json
 from yamnet.config.constants import HOP_SECONDS
 from yamnet.run import get_top_audio_scores
 import soundfile as sf
+from configuration.logger import sound_logger
 from configuration.constants import COUGH_THRESHOLD, COUGH_INDEX, BREATH_INDEX, BREATH_THRESHOLD, VOWEL_INDEX, \
     VOWEL_THRESHOLD, SPEECH_THRESHOLD, SNORE_INDEX, SNORE_THRESHOLD, SPEECH_INDEX
 # from segmentcough.ops.segmentation import segment_cough
@@ -21,7 +22,7 @@ def get_sound_prop_for_index(binary_file, remove_noise, index, is_file=False):
     """
     fs, reduced_noise = get_audio(binary_file, remove_noise, is_file)
     top, scores = get_top_audio_scores(fs, reduced_noise)
-    print(top)
+    sound_logger.info(f'most significant sounds are: {top}')
     noise_prob, index_prob = check_noise_and_index_prob(top, index)
     return fs, reduced_noise, noise_prob, index_prob
 
@@ -40,8 +41,9 @@ def find_cough_sound_prop(binary_file, remove_noise=True, is_file=False):
     #  Need to study about segmentation theory
     # segment, mask = segment_cough(reduced_noise, fs, min_cough_len=0.05, th_l_multiplier=0.05,
     #                               th_h_multiplier=3, cough_padding=0.5)
-    # segment = segment_cough_sound(reduced_noise, fs, min_cough_duration=0.05)
-    segment = segment_cough_sound(reduced_noise, fs, min_cough_duration=0.5)
+    segment = segment_cough_sound(reduced_noise, fs, min_cough_duration=0.05)
+    # minimum cough duration of 0.5 secs can be used for finding breathing, speech sounds
+    # segment = segment_cough_sound(reduced_noise, fs, min_cough_duration=0.5)
 
     total_seg = len(segment)
     # print('old seg', total_seg)

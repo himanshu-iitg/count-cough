@@ -84,12 +84,17 @@ def get_snore_data():
     return find_snoring_sound_prop(data_file.read())
 
 if __name__ == '__main__':
-    handler = logging.StreamHandler(sys.stdout)
+    file_handler = logging.StreamHandler(sys.stdout)
     # handler = logging.StreamHandler()
     logging.basicConfig(filename='flask.log', level=logging.DEBUG,
-                        format=f'%(asctime)s %('f'name)s %(module)s,  =>'
+                        format=f'%(asctime)s %('f'name)s %(module)s, =>'
                                f' %(lineno)d [%(levelname)s]: %(message)s')
-    app.logger.addHandler(handler)
+    app.logger.addHandler(file_handler)
+    # console_handler = logging.StreamHandler()
+    # logging.basicConfig(level=logging.INFO,
+    #                     format=f'%(asctime)s %('f'name)s %(module)s, =>'
+    #                            f' %(lineno)d [%(levelname)s]: %(message)s')
+    # app.logger.addHandler(console_handler)
     # app.run(host="0.0.0.0", port=80, debug=True)
     app.run(host="0.0.0.0", port=5000, debug=True)
     # app.run(host="127.0.0.1", port=5000, debug=True)

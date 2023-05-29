@@ -21,6 +21,7 @@ def get_sound_prop_for_index(binary_file, remove_noise, index, is_file=False):
     :return:
     """
     fs, reduced_noise = get_audio(binary_file, remove_noise, is_file)
+    print('read audio', len(reduced_noise))
     top, scores = get_top_audio_scores(fs, reduced_noise)
     sound_logger.info(f'most significant sounds are: {top}')
     noise_prob, index_prob = check_noise_and_index_prob(top, index)
@@ -46,14 +47,12 @@ def find_cough_sound_prop(binary_file, remove_noise=True, is_file=False):
     # segment = segment_cough_sound(reduced_noise, fs, min_cough_duration=0.5)
 
     total_seg = len(segment)
-    # print('old seg', total_seg)
-    print('new  seg', len(segment))
 
     count = 0
     for i, s in enumerate(segment):
         _top, sc = get_top_audio_scores(fs, s)
         n, cgh = check_noise_and_index_prob(_top, COUGH_INDEX)
-        print(f'number = {i}', _top, cgh)
+        sound_logger.info(f'number = {i} {_top}, {cgh}')
         if cgh > COUGH_THRESHOLD:
             sf.write(f'no_noise_seg_{i}.wav', s, samplerate=fs,
                 subtype='PCM_16', format='wav')

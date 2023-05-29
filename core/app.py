@@ -4,6 +4,10 @@ import sys
 import logging
 from logging import Formatter, FileHandler
 
+import flask.logging
+
+from configuration.logger import logformat, stream_handler, sound_logger, file_handler
+
 print(os.path.join(os.path.dirname(__file__), '../'))
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
@@ -45,10 +49,12 @@ def get_cough_data():
 def get_breath_data():
     # path = "../../segmentcough-master/segmentcough-master/breath.wav"
     data_file = request.files['audio']
-    app.logger.info("Obtained file, sending the data for segmentation.")
+    # app.logger.info("Obtained file, sending the data for segmentation.")
+    # sound_logger.info("Obtained file, sending the data for segmentation.")
 
     output = find_breathing_sound_prop(data_file.read())
     app.logger.info(f'output obtained for cough sound {output}')
+    # sound_logger.info(f'output obtained for cough sound {output}')
     # data_file.save(path)
     # data_file.seek(0)
 
@@ -84,12 +90,18 @@ def get_snore_data():
     return find_snoring_sound_prop(data_file.read())
 
 if __name__ == '__main__':
-    file_handler = logging.StreamHandler(sys.stdout)
-    # handler = logging.StreamHandler()
-    logging.basicConfig(filename='flask.log', level=logging.DEBUG,
-                        format=f'%(asctime)s %('f'name)s %(module)s, =>'
-                               f' %(lineno)d [%(levelname)s]: %(message)s')
+
+    # file_handler = logging.FileHandler('flask.log')
+    # file_handler.setLevel(logging.DEBUG)
+    # file_handler.setFormatter(logformat)
+    # app_log = logging.getLogger('app')
+
+
+    root = logging.getLogger()
+    root.addHandler(file_handler)
+    # app.logger.addHandler(default_handler)
     app.logger.addHandler(file_handler)
+    app.logger.addHandler(stream_handler)
     # console_handler = logging.StreamHandler()
     # logging.basicConfig(level=logging.INFO,
     #                     format=f'%(asctime)s %('f'name)s %(module)s, =>'

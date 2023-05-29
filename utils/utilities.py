@@ -65,6 +65,7 @@ def segment_cough_sound(signal, sr, cough_threshold=0.1, min_cough_duration=0.1,
                 if cough_duration >= min_cough_samples:
                     event_end = i*hop_length + int(padding * sr)
                     event_start -= int(padding * sr)
+                    event_start = max(event_start, 0)
                     cough_segments.append(signal[event_start: event_end+1])
                 event_start = None
 

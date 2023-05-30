@@ -1,17 +1,14 @@
 import sys
 import os
-
-from flask.logging import default_handler
-
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+# print(os.path.join(os.path.dirname(__file__), '../'))
+#
+sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 
 import logging
 
-from configuration.logger import logformat, stream_handler, sound_logger, file_handler
-
-print(os.path.join(os.path.dirname(__file__), '../'))
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
+from configuration.logger import stream_handler, file_handler
 
 from flask import Flask, request
 from flask_cors import CORS
@@ -24,9 +21,10 @@ CORS(app)
 
 @app.route("/", methods=["GET", "POST"])  # at the end point /
 def test_run():
-    print('test run')
-    path = "noise_seg_0.wav"
-    app.logger.debug("Obtained file, sending the data for segmentation.")
+    app.logger.info('start test run')
+    path_ref = "../test/sample.wav"
+    path = os.path.join(os.path.dirname(__file__), path_ref)
+    app.logger.info("Obtained file, sending the data for segmentation.")
 
     return find_cough_sound_prop(path, remove_noise=True, is_file=True)
 

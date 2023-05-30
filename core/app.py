@@ -1,10 +1,11 @@
-import os.path
 import sys
+import os
+
+from flask.logging import default_handler
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 import logging
-from logging import Formatter, FileHandler
-
-import flask.logging
 
 from configuration.logger import logformat, stream_handler, sound_logger, file_handler
 
@@ -20,13 +21,14 @@ from core.sounds import find_cough_sound_prop, find_breathing_sound_prop, find_v
 app = Flask(__name__)  # create an app instance
 CORS(app)
 
+
 @app.route("/", methods=["GET", "POST"])  # at the end point /
 def test_run():
     print('test run')
     path = "noise_seg_0.wav"
     app.logger.debug("Obtained file, sending the data for segmentation.")
 
-    return find_cough_sound_prop(path, remove_noise=False, is_file=True)
+    return find_cough_sound_prop(path, remove_noise=True, is_file=True)
 
 
 @app.route("/cough", methods=["GET", "POST"])  # at the end point /
@@ -35,15 +37,13 @@ def get_cough_data():
     # path = "../../segmentcough-master/segmentcough-master/temp.wav"
     # path = "../../segmentcough-master/segmentcough-master/snore.wav"
     data_file = request.files['audio']
-    app.logger.debug("Obtained file, sending the data for segmentation.")
+    app.logger.info("Obtained file, sending the data for segmentation.")
     # data_file.save(path)
     # output = find_breathing_sound_prop(path)
     output = find_cough_sound_prop(data_file.read())
-    app.logger.debug(f'output obtained for cough sound {output}')
     # data_file.seek(0)
-
-    # return find_cough_sound_prop(path, remove_noise=False)
     return output
+
 
 @app.route("/breath", methods=["GET", "POST"])  # at the end point /
 def get_breath_data():
@@ -59,6 +59,7 @@ def get_breath_data():
     # data_file.seek(0)
 
     return output
+
 
 @app.route("/vowel", methods=["GET", "POST"])  # at the end point /
 def get_vowel_data():
@@ -89,24 +90,12 @@ def get_snore_data():
 
     return find_snoring_sound_prop(data_file.read())
 
+
 if __name__ == '__main__':
-
-    # file_handler = logging.FileHandler('flask.log')
-    # file_handler.setLevel(logging.DEBUG)
-    # file_handler.setFormatter(logformat)
-    # app_log = logging.getLogger('app')
-
-
-    root = logging.getLogger()
-    root.addHandler(file_handler)
-    # app.logger.addHandler(default_handler)
-    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.DEBUG)
     app.logger.addHandler(stream_handler)
-    # console_handler = logging.StreamHandler()
-    # logging.basicConfig(level=logging.INFO,
-    #                     format=f'%(asctime)s %('f'name)s %(module)s, =>'
-    #                            f' %(lineno)d [%(levelname)s]: %(message)s')
-    # app.logger.addHandler(console_handler)
+    app.logger.addHandler(file_handler)
+
     # app.run(host="0.0.0.0", port=80, debug=True)
     app.run(host="0.0.0.0", port=5000, debug=True)
     # app.run(host="127.0.0.1", port=5000, debug=True)

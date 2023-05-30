@@ -17,12 +17,13 @@ def get_audio(binary_file, remove_noise, from_file_path=False):
     """
     if from_file_path:
         wav_data, fs = sf.read(file=binary_file, dtype=np.int16)
+        sound_logger.info('Audio read from file')
     else:
         wav_data, fs = sf.read(io.BytesIO(binary_file), dtype=np.int16)
         sound_logger.info('Audio read from API')
 
     sound_logger.debug(f'wav data = {wav_data}')
-    sound_logger.debug(f'Frequency of input signal is {fs}')
+    sound_logger.info(f'Frequency of input signal is {fs}')
 
     if len(wav_data.shape) > 1:
         wav_data = np.mean(wav_data, axis=1)

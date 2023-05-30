@@ -22,15 +22,14 @@ def check_noise_and_index_prob(top, index):
 
 
 def segment_cough_sound(signal, sr, cough_threshold=0.1, min_cough_duration=0.1, padding=0.1):
-    # Load the audio file
-    # audio_file = "../../segmentcough-master/segmentcough-master/cough.wav"
-    # signal, sr = sf.read(audio_file)
+
     hop_length = int(min_cough_duration*sr)
+    sound_logger.debug(f'Shape of original input signal is {signal.shape}')
     if len(signal.shape) > 1:
         signal = np.mean(signal, axis=1)
 
-    sound_logger.debug(f'Shape of input signal is {signal.shape}')
-    sound_logger.info(f'Hop length is {hop_length} for min_cough_duration of {min_cough_duration}')
+    sound_logger.debug(f'Shape of mean input signal is {signal.shape}')
+    sound_logger.info(f'Hop length is {hop_length} data points for min_cough_duration of {min_cough_duration}')
 
     energy = rms(y=signal, hop_length=hop_length)[0]
     sound_logger.debug(f'signal energy: max = {np.max(energy)} min = {np.min(energy)}')
@@ -66,10 +65,10 @@ def segment_cough_sound(signal, sr, cough_threshold=0.1, min_cough_duration=0.1,
                     event_end = i*hop_length + int(padding * sr)
                     event_start -= int(padding * sr)
                     event_start = max(event_start, 0)
+                    sound_logger.debug(f'event start = {event_start}, event stop = {event_end + 1}')
                     cough_segments.append(signal[event_start: event_end+1])
                 event_start = None
 
-    sound_logger.info(f'Total cough segments identified = {len(cough_segments)}')
     sound_logger.debug(f'cough segments identified: {cough_segments}')
     # Convert cough segments to time in seconds
     # cough_segments = [(start / sr, end / sr) for start, end in cough_segments]

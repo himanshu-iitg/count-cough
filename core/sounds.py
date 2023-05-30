@@ -21,7 +21,6 @@ def get_sound_prop_for_index(binary_file, remove_noise, index, is_file=False):
     :return:
     """
     fs, reduced_noise = get_audio(binary_file, remove_noise, is_file)
-    print('read audio', len(reduced_noise))
     top, scores = get_top_audio_scores(fs, reduced_noise)
     sound_logger.info(f'most significant sounds are: {top}')
     noise_prob, index_prob = check_noise_and_index_prob(top, index)
@@ -38,8 +37,6 @@ def find_cough_sound_prop(binary_file, remove_noise=True, is_file=False):
     fs, reduced_noise, noise_prob, cough_prob = \
         get_sound_prop_for_index(binary_file, remove_noise, COUGH_INDEX, is_file)
 
-    # TODO: need to improve segmentation code not workking very well for different cases.
-    #  Need to study about segmentation theory
     # segment, mask = segment_cough(reduced_noise, fs, min_cough_len=0.05, th_l_multiplier=0.05,
     #                               th_h_multiplier=3, cough_padding=0.5)
     segment = segment_cough_sound(reduced_noise, fs, min_cough_duration=0.05)
@@ -47,21 +44,22 @@ def find_cough_sound_prop(binary_file, remove_noise=True, is_file=False):
     # segment = segment_cough_sound(reduced_noise, fs, min_cough_duration=0.5)
 
     total_seg = len(segment)
+    sound_logger.info(f'Total cough segments identified = {total_seg}')
 
     count = 0
     for i, s in enumerate(segment):
         _top, sc = get_top_audio_scores(fs, s)
         n, cgh = check_noise_and_index_prob(_top, COUGH_INDEX)
-        sound_logger.info(f'number = {i} {_top}, {cgh}')
+        sound_logger.info(f'audio segment number = {i}, cough sound probability = {cgh} '
+                          f'with other most significant sounds {_top[:5]}')
         if cgh > COUGH_THRESHOLD:
-            sf.write(f'no_noise_seg_{i}.wav', s, samplerate=fs,
-                subtype='PCM_16', format='wav')
+            # sf.write(f'no_noise_seg_{i}.wav', s, samplerate=fs,
+            #     subtype='PCM_16', format='wav')
             count += 1
 
     data = {'noise_prob': noise_prob, 'cough_prob': float(round(cough_prob, 2)),
             'total_segments': 1 if total_seg == 0 and cough_prob >= COUGH_THRESHOLD else total_seg,
             'cough_segments': 1 if total_seg == 0 and cough_prob >= COUGH_THRESHOLD else count}
-    print(data)
     return json.dumps(data)
 
 

@@ -91,6 +91,7 @@ def get_snore_data():
 
 if __name__ == '__main__':
     app.logger.setLevel(logging.DEBUG)
+    app.logger.propagate = False
     app.logger.addHandler(stream_handler)
     app.logger.addHandler(file_handler)
 

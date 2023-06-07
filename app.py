@@ -1,5 +1,9 @@
 import sys
 import os
+# import serverless_wsgi
+
+from configuration.logger import stream_handler
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # print(os.path.join(os.path.dirname(__file__), '../'))
@@ -8,7 +12,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 
 import logging
 
-from configuration.logger import stream_handler, file_handler
+# from configuration.logger import stream_handler
 
 from flask import Flask, request
 from flask_cors import CORS
@@ -93,7 +97,7 @@ if __name__ == '__main__':
     app.logger.setLevel(logging.DEBUG)
     app.logger.propagate = False
     app.logger.addHandler(stream_handler)
-    app.logger.addHandler(file_handler)
+    # app.logger.addHandler(file_handler)
 
     # app.run(host="0.0.0.0", port=80, debug=True)
     app.run(host="0.0.0.0", port=5000, debug=True)

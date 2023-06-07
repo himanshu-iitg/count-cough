@@ -1,0 +1,19 @@
+#serverless.yml
+service: flask-container
+
+provider:
+  name: aws
+#  aws_region: ap-south-1
+  ecr:
+    images:
+      appimage:
+        path: ./
+
+functions:
+  app:
+    image:
+      name: appimage
+    timeout: 15
+    events:
+      - http: ANY /
+      - http: 'ANY /{proxy+}'

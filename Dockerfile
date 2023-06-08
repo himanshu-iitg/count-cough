@@ -16,7 +16,8 @@ WORKDIR /var/task/
 COPY ./ ${FUNCTION_DIR}
 # RUN apt-get update && apt-get install -y libgomp1
 
-RUN pip install --default-timeout=500 -r requirements.txt
+RUN pip install --default-timeout=500 -r requirements.txt \
+    && python -m pip install --force-reinstall soundfile
 
 # Grab the zappa handler.py and put it in the working directory
 # RUN ZAPPA_HANDLER_PATH=$( \
@@ -28,6 +29,4 @@ RUN pip install --default-timeout=500 -r requirements.txt
 #
 # CMD [ "handler.lambda_handler" ]
 
-ENTRYPOINT [ "python" ]
-
-CMD ["core/app.py" ]
+CMD ["app.handler"]

@@ -1,6 +1,6 @@
 import sys
 import os
-# import serverless_wsgi
+import serverless_wsgi
 
 from configuration.logger import stream_handler
 
@@ -93,12 +93,18 @@ def get_snore_data():
     return find_snoring_sound_prop(data_file.read())
 
 
-if __name__ == '__main__':
-    app.logger.setLevel(logging.DEBUG)
-    app.logger.propagate = False
-    app.logger.addHandler(stream_handler)
-    # app.logger.addHandler(file_handler)
+app.logger.setLevel(logging.DEBUG)
+app.logger.propagate = False
+app.logger.addHandler(stream_handler)
 
-    # app.run(host="0.0.0.0", port=80, debug=True)
-    app.run(host="0.0.0.0", port=5000, debug=True)
+def handler(event, context):
+    return serverless_wsgi.handle_request(app, event, context)
+
+
+# if __name__ == '__main__':
+
+#     # app.logger.addHandler(file_handler)
+#
+#     # app.run(host="0.0.0.0", port=80, debug=True)
+#     app.run(host="0.0.0.0", port=5000, debug=True)
     # app.run(host="127.0.0.1", port=5000, debug=True)

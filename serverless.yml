@@ -3,7 +3,8 @@ service: flask-container
 
 provider:
   name: aws
-#  aws_region: ap-south-1
+  stage: dev
+  region: ap-south-1
   ecr:
     images:
       appimage:

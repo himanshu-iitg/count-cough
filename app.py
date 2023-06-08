@@ -2,17 +2,13 @@ import sys
 import os
 import serverless_wsgi
 
-from configuration.logger import stream_handler
-
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-# print(os.path.join(os.path.dirname(__file__), '../'))
-#
-sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
+sys.path.append(os.path.join(os.path.dirname(__file__), './'))
 
 import logging
 
-# from configuration.logger import stream_handler
+from configuration.logger import stream_handler
 
 from flask import Flask, request
 from flask_cors import CORS
@@ -26,7 +22,7 @@ CORS(app)
 @app.route("/", methods=["GET", "POST"])  # at the end point /
 def test_run():
     app.logger.info('start test run')
-    path_ref = "../test/sample.wav"
+    path_ref = "test/sample.wav"
     path = os.path.join(os.path.dirname(__file__), path_ref)
     app.logger.info("Obtained file, sending the data for segmentation.")
 

@@ -3,11 +3,9 @@ FROM public.ecr.aws/lambda/python:3.9
 RUN yum install git -y \
  && yum clean all -y && rm -rf /var/cache/yum
 
-#RUN yum install libgomp git -y \
-# && yum clean all -y && rm -rf /var/cache/yum
+RUN export AWS_PROFILE="default"
 
-
-RUN ls
+ENV NUMBA_CACHE_DIR='/tmp'
 
 ARG FUNCTION_DIR="/var/task/"
 

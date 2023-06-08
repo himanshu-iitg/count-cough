@@ -14,7 +14,7 @@ functions:
   app:
     image:
       name: appimage
-    timeout: 15
+    timeout: 30
     events:
       - http: ANY /
       - http: 'ANY /{proxy+}'

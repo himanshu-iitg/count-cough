@@ -4,7 +4,7 @@ import serverless_wsgi
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-sys.path.append(os.path.join(os.path.dirname(__file__), './'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '/'))
 
 import logging
 

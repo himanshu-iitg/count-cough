@@ -18,3 +18,7 @@ functions:
     events:
       - http: ANY /
       - http: 'ANY /{proxy+}'
+
+#custom:
+#  pythonRequirements:
+#    slim: true

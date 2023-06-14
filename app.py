@@ -94,6 +94,9 @@ app.logger.propagate = False
 app.logger.addHandler(stream_handler)
 
 def handler(event, context):
+    if event.get("source") == "serverless-plugin-warmup":
+        app.logger.info("WarmUp - Lambda is warm!")
+        return {}
     return serverless_wsgi.handle_request(app, event, context)
 
 

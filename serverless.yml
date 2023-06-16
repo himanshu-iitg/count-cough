@@ -12,6 +12,28 @@ provider:
       appimage:
         path: ./
 
+plugins:
+  - serverless-plugin-warmup
+  - serverless-apigw-binary
+
+custom:
+  apigwBinary:
+    types: #list of mime-types
+      - 'audio/wav'
+      - 'multipart/form-data'
+  warmup:
+    officeHoursWarmer:
+#      enabled: true
+      events:
+        - schedule: cron(0/5 8-17 ? * MON-FRI *)
+#      concurrency: 10
+      verbose: true
+      logRetentionInDays: 14
+      package:
+        individually: true
+        patterns:
+          - './**'
+
 functions:
   app:
     image:
@@ -24,34 +46,3 @@ functions:
       officeHoursWarmer:
         enabled: true
 #    provisionedConcurrency: 10
-
-
-plugins:
-  - serverless-plugin-warmup
-#  - serverless-apigw-binary
-
-custom:
-  warmup:
-    officeHoursWarmer:
-      enabled: true
-      events:
-        - schedule: cron(0/5 8-17 ? * MON-FRI *)
-#      concurrency: 10
-      verbose: true
-      logRetentionInDays: 14
-      package:
-        individually: true
-        patterns:
-          - './**'
-        exclude:
-          - .git/**
-          - '.git/**'
-          - venv/**
-
-
-#
-#custom:
-#  apigwBinary:
-#    types: #list of mime-types
-#      - 'audio/wav'
-#      - 'multipart/form-data'

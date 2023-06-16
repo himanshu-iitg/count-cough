@@ -15,7 +15,7 @@ COPY ./ ${FUNCTION_DIR}
 # RUN apt-get update && apt-get install -y libgomp1
 
 RUN pip install --default-timeout=500 -r requirements.txt \
-    && python -m pip install --force-reinstall soundfile
+    && python -m pip install --force-reinstall soundfile==0.12.1
 
 # Grab the zappa handler.py and put it in the working directory
 # RUN ZAPPA_HANDLER_PATH=$( \

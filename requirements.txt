@@ -1,4 +1,5 @@
 git+https://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@github.com/himanshu-iitg/yamnet.git@yamnet
+soundfile==0.12.1
 noisereduce
 flask
 flask-cors

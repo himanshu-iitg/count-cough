@@ -25,8 +25,7 @@ custom:
     officeHoursWarmer:
 #      enabled: true
       events:
-        - schedule: cron(0/5 8-17 ? * MON-FRI *)
-#      concurrency: 10
+        - schedule: cron(0/5 1.5-14 ? * MON-FRI *)
       verbose: true
       logRetentionInDays: 14
       package:
@@ -45,4 +44,3 @@ functions:
     warmup:
       officeHoursWarmer:
         enabled: true
-#    provisionedConcurrency: 10

@@ -21,11 +21,12 @@ custom:
     types: #list of mime-types
       - 'audio/wav'
       - 'multipart/form-data'
+#  add restriction for api gateway
   warmup:
     officeHoursWarmer:
 #      enabled: true
       events:
-        - schedule: cron(0/5 1.5-14 ? * MON-FRI *)
+        - schedule: cron(0/5 2-14 ? * MON-FRI *)
       verbose: true
       logRetentionInDays: 14
       package:

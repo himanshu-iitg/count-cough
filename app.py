@@ -22,7 +22,7 @@ CORS(app)
 @app.route("/", methods=["GET", "POST"])  # at the end point /
 def test_run():
     app.logger.info('start test run')
-    path_ref = "test/sample.wav"
+    path_ref = "test/sample2.wav"
     path = os.path.join(os.path.dirname(__file__), path_ref)
     app.logger.info("Obtained file, sending the data for segmentation.")
 
@@ -35,11 +35,12 @@ def get_cough_data():
     # path = "../../segmentcough-master/segmentcough-master/temp.wav"
     # path = "../../segmentcough-master/segmentcough-master/snore.wav"
     data_file = request.files['audio']
+    app.logger.info(f'candidate id = {request.form["candidate_id"]}')
     app.logger.info("Obtained file, sending the data for segmentation.")
     # data_file.save(path)
     # output = find_breathing_sound_prop(path)
     output = find_cough_sound_prop(data_file.read())
-    # data_file.seek(0)
+    app.logger.info(f"final cough sound result = {output}")
     return output
 
 
@@ -47,14 +48,10 @@ def get_cough_data():
 def get_breath_data():
     # path = "../../segmentcough-master/segmentcough-master/breath.wav"
     data_file = request.files['audio']
-    # app.logger.info("Obtained file, sending the data for segmentation.")
-    # sound_logger.info("Obtained file, sending the data for segmentation.")
+    app.logger.info(f'candidate id = {request.form["candidate_id"]}')
 
     output = find_breathing_sound_prop(data_file.read())
-    app.logger.info(f'output obtained for cough sound {output}')
-    # sound_logger.info(f'output obtained for cough sound {output}')
-    # data_file.save(path)
-    # data_file.seek(0)
+    app.logger.info(f"final breath sound result = {output}")
 
     return output
 
@@ -63,35 +60,42 @@ def get_breath_data():
 def get_vowel_data():
     # path = "../../segmentcough-master/segmentcough-master/vowel.wav"
     data_file = request.files['audio']
-    # data_file.save(path)
-    # data_file.seek(0)
+    app.logger.info(f'candidate id = {request.form["candidate_id"]}')
 
-    return find_vowel_sound_prop(data_file.read())
+    output = find_vowel_sound_prop(data_file.read())
+    app.logger.info(f"final vowel sound result = {output}")
+
+    return output
 
 
 @app.route("/speech", methods=["GET", "POST"])  # at the end point /
 def get_speech_data():
     # path = "../../segmentcough-master/segmentcough-master/speech.wav"
     data_file = request.files['audio']
-    # data_file.save(path)
-    # data_file.seek(0)
+    app.logger.info(f'candidate id = {request.form["candidate_id"]}')
 
-    return find_speech_sound_prop(data_file.read())
+    output = find_speech_sound_prop(data_file.read())
+    app.logger.info(f"final speech sound result = {output}")
+
+    return output
 
 
 @app.route("/snore", methods=["GET", "POST"])  # at the end point /
 def get_snore_data():
     # path = "../../segmentcough-master/segmentcough-master/snore.wav"
     data_file = request.files['audio']
-    # data_file.save(path)
-    # data_file.seek(0)
+    app.logger.info(f'candidate id = {request.form["candidate_id"]}')
 
-    return find_snoring_sound_prop(data_file.read())
+    output = find_snoring_sound_prop(data_file.read())
+    app.logger.info(f"final snore sound result = {output}")
+
+    return output
 
 
 app.logger.setLevel(logging.DEBUG)
 app.logger.propagate = False
 app.logger.addHandler(stream_handler)
+
 
 def handler(event, context):
     if event.get("source") == "serverless-plugin-warmup":
@@ -100,10 +104,7 @@ def handler(event, context):
     return serverless_wsgi.handle_request(app, event, context)
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
+    # app.logger.addHandler(file_handler)
 
-#     # app.logger.addHandler(file_handler)
-#
-#     # app.run(host="0.0.0.0", port=80, debug=True)
-#     app.run(host="0.0.0.0", port=5000, debug=True)
-    # app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(host="127.0.0.1", port=5000, debug=True)

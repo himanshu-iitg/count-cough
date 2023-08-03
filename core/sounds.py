@@ -58,7 +58,7 @@ def find_cough_sound_prop(binary_file, remove_noise=True, is_file=False):
             count += 1
 
     data = {'noise_prob': noise_prob, 'cough_prob': float(round(cough_prob, 2)),
-            'has_cough_sound': bool(cough_prob >= COUGH_THRESHOLD),
+            'has_sound': bool(cough_prob >= COUGH_THRESHOLD),
             'total_segments': 1 if total_seg == 0 and cough_prob >= COUGH_THRESHOLD else total_seg,
             'cough_segments': 1 if total_seg == 0 and cough_prob >= COUGH_THRESHOLD else count}
     return json.dumps(data)
@@ -75,7 +75,7 @@ def find_breathing_sound_prop(binary_file, remove_noise=False):
         get_sound_prop_for_index(binary_file, remove_noise, BREATH_INDEX)
 
     data = {'noise_prob': noise_prob, 'breath_prob': float(round(breath_prob, 2)),
-            'has_breathing_sound': bool(breath_prob >= BREATH_THRESHOLD)}
+            'has_sound': bool(breath_prob >= BREATH_THRESHOLD)}
     print(data)
     return json.dumps(data)
 
@@ -91,7 +91,7 @@ def find_vowel_sound_prop(binary_file, remove_noise=False):
         get_sound_prop_for_index(binary_file, remove_noise, VOWEL_INDEX)
 
     data = {'noise_prob': noise_prob, 'vowel_prob': float(round(vowel_prob, 2)),
-            'has_vowel_sound': bool(vowel_prob >= VOWEL_THRESHOLD)}
+            'has_sound': bool(vowel_prob >= VOWEL_THRESHOLD)}
     print(data)
     return json.dumps(data)
 
@@ -107,7 +107,7 @@ def find_speech_sound_prop(binary_file, remove_noise=False):
         get_sound_prop_for_index(binary_file, remove_noise, SPEECH_INDEX)
 
     data = {'noise_prob': noise_prob, 'speech_prob': float(round(speech_prob, 2)),
-            'has_speech_sound': bool(speech_prob >= SPEECH_THRESHOLD)}
+            'has_sound': bool(speech_prob >= SPEECH_THRESHOLD)}
     print(data)
     return json.dumps(data)
 
@@ -127,7 +127,7 @@ def find_snoring_sound_prop(binary_file, remove_noise=False):
     duration = HOP_SECONDS*sum([1 for n in scores[:, SNORE_INDEX] if n >= SNORE_THRESHOLD])
 
     data = {'noise_prob': noise_prob, 'snore_prob': float(round(snore_prob, 2)),
-            'has_snoring_sound': bool(snore_prob >= SNORE_THRESHOLD),
+            'has_sound': bool(snore_prob >= SNORE_THRESHOLD),
             'snoring_duration': duration}
     print(data)
     return json.dumps(data)

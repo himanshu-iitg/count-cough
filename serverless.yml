@@ -26,7 +26,7 @@ custom:
     officeHoursWarmer:
 #      enabled: true
       events:
-        - schedule: cron(0/5 2-14 ? * MON-FRI *)
+        - schedule: cron(0/5 2-14 ? * MON-SAT *)
       verbose: true
       logRetentionInDays: 14
       package:

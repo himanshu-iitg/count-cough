@@ -6,12 +6,12 @@ COUGH_THRESHOLD = 0.2
 COUGH_INDEX = 42
 
 # Breath settings
-BREATH_THRESHOLD = 0.2
+BREATH_THRESHOLD = 0.1
 BREATH_INDEX = 36
 
 # Vowel settings
-VOWEL_THRESHOLD = 0.05
-VOWEL_INDEX = 27 # chant 28 mantra
+VOWEL_THRESHOLDS = [0.05, 0.05, 0.2, 0.25]
+VOWEL_INDEXES = [27, 28, 249, 0] # chant 28 mantra, 249 vocal music, speech 0, 132 music
 
 # Speech settings
 SPEECH_THRESHOLD = 0.3

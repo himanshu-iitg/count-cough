@@ -13,7 +13,7 @@ from configuration.logger import stream_handler
 from flask import Flask, request
 from flask_cors import CORS
 from core.sounds import find_cough_sound_prop, find_breathing_sound_prop, find_vowel_sound_prop, find_speech_sound_prop, \
-    find_snoring_sound_prop
+    find_snoring_sound_prop, find_blow_sound_prop
 
 app = Flask(__name__)  # create an app instance
 CORS(app)
@@ -67,6 +67,17 @@ def get_vowel_data():
 
     return output
 
+
+@app.route("/blow", methods=["GET", "POST"])  # at the end point /
+def get_blow_data():
+    # path = "../../segmentcough-master/segmentcough-master/vowel.wav"
+    data_file = request.files['audio']
+    app.logger.info(f'candidate id = {request.form["candidate_id"]}')
+
+    output = find_blow_sound_prop(data_file.read())
+    app.logger.info(f"final blow sound result = {output}")
+
+    return output
 
 @app.route("/speech", methods=["GET", "POST"])  # at the end point /
 def get_speech_data():

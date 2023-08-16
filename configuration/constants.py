@@ -17,6 +17,10 @@ VOWEL_INDEXES = [27, 28, 249, 0] # chant 28 mantra, 249 vocal music, speech 0, 1
 SPEECH_THRESHOLD = 0.3
 SPEECH_INDEX = 0
 
+# wind/blow settings
+BLOW_THRESHOLDS = [0.10, 0.10]
+BLOW_INDEXES = [277, 279]  # 277 wind, 279 wind noise
+
 # Snore settings
 SNORE_THRESHOLD = 0.3
 SNORE_INDEX = 38 # 74 growling 41 snort

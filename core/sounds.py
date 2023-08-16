@@ -5,7 +5,7 @@ from yamnet.run import get_top_audio_scores
 import soundfile as sf
 from configuration.logger import sound_logger
 from configuration.constants import COUGH_THRESHOLD, COUGH_INDEX, BREATH_INDEX, BREATH_THRESHOLD, VOWEL_INDEXES, \
-    VOWEL_THRESHOLDS, SPEECH_THRESHOLD, SNORE_INDEX, SNORE_THRESHOLD, SPEECH_INDEX
+    VOWEL_THRESHOLDS, SPEECH_THRESHOLD, SNORE_INDEX, SNORE_THRESHOLD, SPEECH_INDEX, BLOW_INDEXES, BLOW_THRESHOLDS
 # from segmentcough.ops.segmentation import segment_cough
 from utils.input import get_audio
 from utils.utilities import check_noise_and_index_prob, segment_cough_sound
@@ -105,6 +105,30 @@ def find_vowel_sound_prop(binary_file, remove_noise=False):
 
     return json.dumps(data)
 
+
+def find_blow_sound_prop(binary_file, remove_noise=False):
+    """
+    --> detects if cough is present in the voice or not
+    :param binary_file:
+    :param remove_noise:
+    :return:
+    """
+    noises = []
+    sounds = []
+    for index in BLOW_INDEXES:
+        fs, reduced_noise, noise_prob, sound_prob = \
+            get_sound_prop_for_index(binary_file, remove_noise, index)
+        noises.append(noise_prob)
+        sounds.append(sound_prob)
+
+    for index in range(len(BLOW_INDEXES)):
+        data = {'noise_prob': noises[index], 'blow_prob': float(round(sounds[index], 2)),
+                'has_sound': bool(sounds[index] >= BLOW_THRESHOLDS[index]), 'used_index': BLOW_INDEXES[index]}
+        if data['has_sound']:
+            print(data)
+            return json.dumps(data)
+
+    return json.dumps(data)
 
 def find_speech_sound_prop(binary_file, remove_noise=False):
     """

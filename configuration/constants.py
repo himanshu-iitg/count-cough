@@ -18,8 +18,8 @@ SPEECH_THRESHOLD = 0.3
 SPEECH_INDEX = 0
 
 # wind/blow settings
-BLOW_THRESHOLDS = [0.10, 0.10]
-BLOW_INDEXES = [277, 279]  # 277 wind, 279 wind noise
+BLOW_THRESHOLDS = [0.10, 0.10, 0.10]
+BLOW_INDEXES = [277, 279, 420]  # 277 wind, 279 wind noise
 
 # Snore settings
 SNORE_THRESHOLD = 0.3

@@ -76,7 +76,7 @@ def find_breathing_sound_prop(binary_file, remove_noise=False):
         get_sound_prop_for_index(binary_file, remove_noise, BREATH_INDEX)
 
     data = {'noise_prob': noise_prob, 'breath_prob': float(round(breath_prob, 2)),
-            'has_sound': bool(breath_prob >= BREATH_THRESHOLD)}
+            'has_sound': bool(round(breath_prob, 2) >= BREATH_THRESHOLD)}
     print(data)
     return json.dumps(data)
 

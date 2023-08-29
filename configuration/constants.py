@@ -6,7 +6,7 @@ COUGH_THRESHOLD = 0.2
 COUGH_INDEX = 42
 
 # Breath settings
-BREATH_THRESHOLD = 0.1
+BREATH_THRESHOLD = 0.05
 BREATH_INDEX = 36
 
 # Vowel settings

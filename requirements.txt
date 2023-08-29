@@ -1,4 +1,4 @@
-git+https://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@github.com/himanshu-iitg/yamnet.git@yamnet
+git+https://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@github.com/himanshu-iitg/yamnet.git@yamnet
 soundfile==0.12.1
 noisereduce
 flask

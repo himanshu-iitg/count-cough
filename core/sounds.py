@@ -60,6 +60,7 @@ def find_cough_sound_prop(binary_file, remove_noise=True, is_file=False):
 
     data = {'noise_prob': noise_prob, 'cough_prob': float(round(cough_prob, 2)),
             'has_sound': bool(cough_prob >= COUGH_THRESHOLD or count),
+            'remove_noise': remove_noise,
             'total_segments': 1 if total_seg == 0 and cough_prob >= COUGH_THRESHOLD else total_seg,
             'cough_segments': 1 if total_seg == 0 and cough_prob >= COUGH_THRESHOLD else count}
     return json.dumps(data)
@@ -76,7 +77,8 @@ def find_breathing_sound_prop(binary_file, remove_noise=False):
         get_sound_prop_for_index(binary_file, remove_noise, BREATH_INDEX)
 
     data = {'noise_prob': noise_prob, 'breath_prob': float(round(breath_prob, 2)),
-            'has_sound': bool(round(breath_prob, 2) >= BREATH_THRESHOLD)}
+            'has_sound': bool(round(breath_prob, 2) >= BREATH_THRESHOLD),
+            'remove_noise': remove_noise}
     print(data)
     return json.dumps(data)
 
@@ -98,7 +100,8 @@ def find_vowel_sound_prop(binary_file, remove_noise=False):
 
     for index in range(len(VOWEL_INDEXES)):
         data = {'noise_prob': noises[index], 'vowel_prob': float(round(sounds[index], 2)),
-                'has_sound': bool(sounds[index] >= VOWEL_THRESHOLDS[index]), 'used_index': VOWEL_INDEXES[index]}
+                'has_sound': bool(sounds[index] >= VOWEL_THRESHOLDS[index]), 'used_index': VOWEL_INDEXES[index],
+                'remove_noise': remove_noise,}
         if data['has_sound']:
             print(data)
             return json.dumps(data)
@@ -123,7 +126,8 @@ def find_blow_sound_prop(binary_file, remove_noise=False):
 
     for index in range(len(BLOW_INDEXES)):
         data = {'noise_prob': noises[index], 'blow_prob': float(round(sounds[index], 2)),
-                'has_sound': bool(sounds[index] >= BLOW_THRESHOLDS[index]), 'used_index': BLOW_INDEXES[index]}
+                'has_sound': bool(sounds[index] >= BLOW_THRESHOLDS[index]), 'used_index': BLOW_INDEXES[index],
+                'remove_noise': remove_noise,}
         if data['has_sound']:
             print(data)
             return json.dumps(data)
@@ -141,7 +145,8 @@ def find_speech_sound_prop(binary_file, remove_noise=False):
         get_sound_prop_for_index(binary_file, remove_noise, SPEECH_INDEX)
 
     data = {'noise_prob': noise_prob, 'speech_prob': float(round(speech_prob, 2)),
-            'has_sound': bool(speech_prob >= SPEECH_THRESHOLD)}
+            'has_sound': bool(speech_prob >= SPEECH_THRESHOLD),
+            'remove_noise': remove_noise,}
     print(data)
     return json.dumps(data)
 
@@ -162,6 +167,7 @@ def find_snoring_sound_prop(binary_file, remove_noise=False):
 
     data = {'noise_prob': noise_prob, 'snore_prob': float(round(snore_prob, 2)),
             'has_sound': bool(snore_prob >= SNORE_THRESHOLD),
+            'remove_noise': remove_noise,
             'snoring_duration': duration}
     print(data)
     return json.dumps(data)

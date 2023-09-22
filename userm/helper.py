@@ -30,10 +30,19 @@ class AIIMSJDPUser:
 
 
 class CompanyUser:
-    centerName = "Live Long AI"
-    centerId = "LLAI_GGN"
+    centerName = "DIY Healthcare"
+    centerId = "DIYH_GGN"
 
     city = "gurugram"
     state = "haryana"
+    country = "INDIA"
+    fullName = None
+
+class TESTUser:
+    centerName = "Test User"
+    centerId = "test_user"
+
+    city = "test"
+    state = "test"
     country = "INDIA"
     fullName = None

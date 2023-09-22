@@ -22,7 +22,7 @@ CORS(app)
 @app.route("/", methods=["GET", "POST"])  # at the end point /
 def test_run():
     app.logger.info('start test run')
-    path_ref = "test/sample2.wav"
+    path_ref = "test/sample2.wav"#"C:\\Users\\Lenovo\\Desktop\\cough_1.wav"
     path = os.path.join(os.path.dirname(__file__), path_ref)
     app.logger.info("Obtained file, sending the data for segmentation.")
 
@@ -36,10 +36,12 @@ def get_cough_data():
     # path = "../../segmentcough-master/segmentcough-master/snore.wav"
     data_file = request.files['audio']
     app.logger.info(f'candidate id = {request.form["candidate_id"]}')
+    remove_noise = bool(request.form["remove_noise"])
+    app.logger.info(f'noise cancellation enabled = {remove_noise}')
     app.logger.info("Obtained file, sending the data for segmentation.")
     # data_file.save(path)
     # output = find_breathing_sound_prop(path)
-    output = find_cough_sound_prop(data_file.read())
+    output = find_cough_sound_prop(data_file.read(), remove_noise=remove_noise)
     app.logger.info(f"final cough sound result = {output}")
     return output
 

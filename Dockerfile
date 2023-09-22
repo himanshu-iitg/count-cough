@@ -17,14 +17,5 @@ COPY ./ ${FUNCTION_DIR}
 RUN pip install --default-timeout=500 -r requirements.txt \
     && python -m pip install --force-reinstall soundfile==0.12.1
 
-# Grab the zappa handler.py and put it in the working directory
-# RUN ZAPPA_HANDLER_PATH=$( \
-#     python -c "from zappa import handler; print (handler.__file__)" \
-#     ) \
-#     && echo $ZAPPA_HANDLER_PATH \
-#     && cp $ZAPPA_HANDLER_PATH ${FUNCTION_DIR}
-#
-#
-# CMD [ "handler.lambda_handler" ]
 
 CMD ["app.handler"]

@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.9
+FROM public.ecr.aws/lambda/python:3.9.2023.09.19.12-x86_64
 
 RUN yum install git -y \
  && yum clean all -y && rm -rf /var/cache/yum

@@ -22,11 +22,11 @@ CORS(app)
 @app.route("/", methods=["GET", "POST"])  # at the end point /
 def test_run():
     app.logger.info('start test run')
-    path_ref = "test/sample2.wav"#"C:\\Users\\Lenovo\\Desktop\\cough_1.wav"
+    path_ref = "test/sample.wav"#"C:\\Users\\Lenovo\\Desktop\\cough_1.wav"
     path = os.path.join(os.path.dirname(__file__), path_ref)
     app.logger.info("Obtained file, sending the data for segmentation.")
 
-    return find_cough_sound_prop(path, remove_noise=True, is_file=True)
+    return find_cough_sound_prop(path, remove_noise=False, is_file=True)
 
 
 @app.route("/cough", methods=["GET", "POST"])  # at the end point /

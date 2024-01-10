@@ -22,6 +22,12 @@ class User:
 class AIIMSJDPUser:
     centerName = "AIIMS JODHPUR"
     centerId = "AIIMS_JDP"
+    allowedPermissions = [
+        {
+            "recordStethoscope": False,
+            "showSuspectedLungCancer": True
+        }
+    ]
 
     city = "jodhpur"
     state = "rajasthan"
@@ -41,8 +47,23 @@ class CompanyUser:
 class TESTUser:
     centerName = "Test User"
     centerId = "test_user"
+    allowedPermissions = [
+        {
+            "recordStethoscope": True,
+            "showSuspectedLungCancer": False
+        }
+    ]
 
     city = "test"
     state = "test"
+    country = "INDIA"
+    fullName = None
+
+class DrAshvendraUser:
+    centerName = "Dr Ashvendra Chawla"
+    centerId = "DR_CHAWLA"
+
+    city = "hisar"
+    state = "haryana"
     country = "INDIA"
     fullName = None

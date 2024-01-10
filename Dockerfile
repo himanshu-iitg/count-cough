@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.9
+FROM public.ecr.aws/lambda/python:3.9.2023.09.19.12-x86_64
 
 RUN yum install git -y \
  && yum clean all -y && rm -rf /var/cache/yum
@@ -14,7 +14,7 @@ WORKDIR /var/task/
 COPY ./ ${FUNCTION_DIR}
 # RUN apt-get update && apt-get install -y libgomp1
 
-RUN pip install --default-timeout=500 -r requirements.txt \
+RUN pip install --default-timeout=1000 -r requirements.txt \
     && python -m pip install --force-reinstall soundfile==0.12.1
 
 

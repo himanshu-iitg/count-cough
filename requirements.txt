@@ -1,5 +1,7 @@
 git+https://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@github.com/himanshu-iitg/yamnet.git@yamnet
 soundfile==0.12.1
-noisereduce
-flask
-flask-cors
+noisereduce==2.0.1
+flask==2.3.3
+flask-cors==4.0.0
+serverless-wsgi==3.0.2
+

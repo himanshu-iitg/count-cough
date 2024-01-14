@@ -7,14 +7,13 @@ provider:
   region: ap-south-1
   ecr:
     images:
-#      dockerslim:
-#        pa
       appimage:
         path: ./
 
 plugins:
   - serverless-plugin-warmup
   - serverless-apigw-binary
+
 
 custom:
   apigwBinary:
@@ -32,7 +31,11 @@ custom:
       package:
         individually: true
         patterns:
+#          - '!node_modules/**'
+#          - '!venv/**'
           - './**'
+  wsgi:
+    app:app.app
 
 functions:
   app:

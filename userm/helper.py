@@ -67,3 +67,13 @@ class DrAshvendraUser:
     state = "haryana"
     country = "INDIA"
     fullName = None
+
+class CHUDAMANIHSRUser:
+    centerName = "Chudamani Hospital"
+    centerId = "CHUDAMANI_HSR"
+    allowedPermissions = []
+
+    city = "hisar"
+    state = "haryana"
+    country = "INDIA"
+    fullName = None

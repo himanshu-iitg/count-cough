@@ -1,6 +1,6 @@
 import requests
 
-from userm.helper import AIIMSJDPUser, User, CompanyUser, TESTUser, DrAshvendraUser
+from userm.helper import AIIMSJDPUser, User, CompanyUser, TESTUser, DrAshvendraUser, CHUDAMANIHSRUser
 from userm.config import API_URL, ACCESS_TOKEN
 
 import random
@@ -43,14 +43,14 @@ def create_user(helper: User):
 if __name__ == "__main__":
     # user = AIIMSJDPUser
     # user = CompanyUser
-    user = TESTUser
+    user = CHUDAMANIHSRUser
     user.access_token = ACCESS_TOKEN
-    user.firstName = "Dr test"
-    user.lastName = "test"
-    user.uniqueName = "drtesttest2"
-    user.email = "drtesttest2@airs.com"
+    user.firstName = "Dr Azad"
+    user.lastName = "Singh"
+    user.uniqueName = "drazadsingh"
+    user.email = "drazadsingh@airs.com"
     # password = generatePassword(10)
-    password = "airs@2023"#"@l7fgesvi1"
+    password = "airs@2024"#"@l7fgesvi1"
     user.password = password
     print('password', password)
     user.isAdmin = True

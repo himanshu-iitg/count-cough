@@ -1,9 +1,17 @@
 import requests
 
-from userm.helper import AIIMSJDPUser, User, CompanyUser, TESTUser, DrAshvendraUser, CHUDAMANIHSRUser
+# import sys
+# sys.path.append('E:\\business ideas\\flask_app\count-cough\\userm')
+
+from userm.helper import AIIMSJDPUser, User, CompanyUser, TESTUser, DrAshvendraUser, DrRajkumarHSRUser
 from userm.config import API_URL, ACCESS_TOKEN
 
 import random
+
+
+
+
+
 
 
 # a function that will generate a password on length (n) and return it.
@@ -40,15 +48,16 @@ def create_user(helper: User):
     print(x.text)
 
 
+
 if __name__ == "__main__":
     # user = AIIMSJDPUser
     # user = CompanyUser
-    user = CHUDAMANIHSRUser
+    user = DrRajkumarHSRUser
     user.access_token = ACCESS_TOKEN
-    user.firstName = "Dr Azad"
-    user.lastName = "Singh"
-    user.uniqueName = "drazadsingh"
-    user.email = "drazadsingh@airs.com"
+    user.firstName = "Dr Rajkumar"
+    user.lastName = " "
+    user.uniqueName = "drrajkumar"
+    user.email = "drrajkumar@airs.com"
     # password = generatePassword(10)
     password = "airs@2024"#"@l7fgesvi1"
     user.password = password

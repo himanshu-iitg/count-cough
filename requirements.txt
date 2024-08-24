@@ -1,7 +1,12 @@
-git+https://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@github.com/himanshu-iitg/yamnet.git@yamnet
+git+https://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@github.com/himanshu-iitg/yamnet.git@yamnet
 soundfile==0.12.1
 noisereduce==2.0.1
 flask==2.3.3
 flask-cors==4.0.0
 werkzeug==2.3.7
 
+
+requests~=2.28.2
+numpy~=1.23.5
+tensorflow~=2.9.0
+librosa~=0.10.0.post2

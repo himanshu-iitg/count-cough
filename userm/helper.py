@@ -68,9 +68,9 @@ class DrAshvendraUser:
     country = "INDIA"
     fullName = None
 
-class CHUDAMANIHSRUser:
-    centerName = "Chudamani Hospital"
-    centerId = "CHUDAMANI_HSR"
+class DrRajkumarHSRUser:
+    centerName = "Dr Rajkumar Hisar"
+    centerId = "Dr_RAJKUMAR_HSR"
     allowedPermissions = []
 
     city = "hisar"

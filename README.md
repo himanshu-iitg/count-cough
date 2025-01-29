@@ -1,3 +1,5 @@
+### NOTE: This repo is a backend component of bigger project for data collection of respiratory sounds, the details of which are given below
+
 # Website and UI for AIRS (Artificial Intelligence in Respiratory Sounds)
 
 ## Key contents
